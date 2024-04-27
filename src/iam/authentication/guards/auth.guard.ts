@@ -51,6 +51,7 @@ export class AuthGuard implements CanActivate {
         const { sub } = await this.jwtService.verifyAsync<{
           sub: number;
         }>(req.signedCookies[ACCESS_TOKEN_KEY], this.jwtConfiguration);
+
         const user = await this.userService.getById(sub);
         if (!user) throw new UnauthorizedException('Пользователь не найден');
 

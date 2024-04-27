@@ -2,12 +2,12 @@ import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { envSchema } from 'env';
-import { DB_TOKEN } from './common/const';
 import { dbConfig } from './configs/db.config';
+import { DB_TOKEN } from './db/db.constants';
 import { IamModule } from './iam/iam.module';
 import { ProductModule } from './product/product.module';
-import { UserModule } from './user/user.module';
 import { RedisModule } from './redis/redis.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
