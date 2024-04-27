@@ -43,9 +43,6 @@ export class AuthService {
   async signIn({ email, password }: SignInDto): Promise<SignInResponse> {
     const user = await this.userService.getByEmail(email, true);
 
-    console.log(email, password);
-    console.log(user);
-
     if (!user || !(await this.hashingService.compare(password, user.password)))
       throw new BadRequestException('неправильный пароль или эл.адрес');
 
@@ -101,7 +98,9 @@ export class AuthService {
       }),
     ]);
 
-    this.redisService.insert(this.generateStrFromId(user.id), refreshTokenId);
+    this.redisService.insert(this.generateStrFromId(user.id), refreshTokenId, {
+      EX: this.jwtConfiguration.refreshRedisMaxAge,
+    });
 
     return { accessToken, refreshToken };
   }

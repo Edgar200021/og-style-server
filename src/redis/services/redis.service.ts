@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { RedisClientType } from '@redis/client';
 import { Env } from 'env';
-import { createClient } from 'redis';
+import { createClient, SetOptions } from 'redis';
 
 @Injectable()
 export class RedisService
@@ -32,8 +32,8 @@ export class RedisService
     return await this.client.get(key);
   }
 
-  async insert(key: string, value: any) {
-    await this.client.set(key, value);
+  async insert(key: string, value: any, options?: SetOptions) {
+    await this.client.set(key, value, options);
   }
 
   async delete(key: string) {

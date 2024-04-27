@@ -10,6 +10,7 @@ export const envSchema = z.object({
   REDIS_URL: z.string(),
   ACCESS_COOKIE_MAX_AGE: z.coerce.number(),
   REFRESH_COOKIE_MAX_AGE: z.coerce.number(),
+  REDRES_REDIS_MAX_AGE: z.coerce.number(),
 });
 
 export type Env = z.infer<typeof envSchema>;

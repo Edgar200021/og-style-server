@@ -81,14 +81,14 @@ export class AuthGuard implements CanActivate {
     res.cookie(ACCESS_TOKEN_KEY, accessToken, {
       httpOnly: true,
       secure: this.jwtConfiguration.nodeEnv == 'production',
-      maxAge: Number(this.jwtConfiguration.accessCookieMaxAge),
+      maxAge: this.jwtConfiguration.accessCookieMaxAge,
       signed: true,
     });
 
     res.cookie(REFRESH_TOKEN_KEY, refreshToken, {
       httpOnly: true,
       secure: this.jwtConfiguration.nodeEnv == 'production',
-      maxAge: Number(this.jwtConfiguration.refreshCookieMaxAge),
+      maxAge: this.jwtConfiguration.refreshCookieMaxAge,
       signed: true,
     });
   }
