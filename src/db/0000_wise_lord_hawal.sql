@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"password" text NOT NULL,
 	"name" text,
 	"avatar" text,
-	"password_reset_expires" timestamp,
+	"password_reset_expires" timestamp with time zone,
 	"password_reset_token" text,
 	"role" role[] DEFAULT '{user}'::role[],
 	CONSTRAINT "users_email_unique" UNIQUE("email")

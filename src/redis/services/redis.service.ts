@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { RedisClientType } from '@redis/client';
 import { Env } from 'env';
-import { createClient, SetOptions } from 'redis';
+import { SetOptions, createClient } from 'redis';
 
 @Injectable()
 export class RedisService

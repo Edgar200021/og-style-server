@@ -1,5 +1,5 @@
 {
-  "id": "0dd9884a-a593-40a5-91bc-dcc90396bdfa",
+  "id": "63b5e0f9-d48e-40e7-a4c7-6ee3d49e0f6a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -211,7 +211,7 @@
         },
         "password_reset_expires": {
           "name": "password_reset_expires",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },

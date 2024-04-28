@@ -17,7 +17,9 @@ export const user = pgTable('users', {
   password: text('password').notNull(),
   name: text('name'),
   avatar: text('avatar'),
-  passwordResetExpires: timestamp('password_reset_expires'),
+  passwordResetExpires: timestamp('password_reset_expires', {
+    withTimezone: true,
+  }),
   passwordResetToken: text('password_reset_token'),
   role: role('role').array().default(['user']),
 });

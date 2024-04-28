@@ -5,6 +5,6 @@ export class SignUpDto {
   email: string;
 
   @IsString()
-  @MinLength(8, { message: 'пароль Должно быть более 8 символов' })
+  @MinLength(8, { message: 'Минимальная длина пароля 8 символов' })
   password: string;
 }
