@@ -16,6 +16,12 @@ export const envSchema = z.object({
   SMTP_PASSWORD: z.string(),
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),
+  GOOGLE_CLIENT_SECRET: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_PROJECT_ID: z.string(),
+  GITHUB_CLIENT_SECRET: z.string(),
+  GITHUB_CLIENT_ID: z.string(),
+  GITHUB_REDIRECT_URL: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

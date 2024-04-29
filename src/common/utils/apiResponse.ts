@@ -1,11 +1,4 @@
-export const successResponse = <T>({
-  data,
-  message,
-}: {
-  data?: T;
-  message?: string;
-}) => ({
+export const successResponse = <T>(data: T) => ({
   status: 'success',
-  ...(message && { message }),
-  ...(data && { data }),
+  data,
 });

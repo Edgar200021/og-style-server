@@ -12,7 +12,6 @@ import crypto from 'node:crypto';
 import * as schema from 'src/db/schema';
 import { RedisService } from 'src/redis/services/redis.service';
 import { UserService } from 'src/user/user.service';
-import { v4 as uuidv4 } from 'uuid';
 import jwtConfig from '../config/jwt.config';
 
 import { MailerService } from '@nestjs-modules/mailer';
@@ -154,14 +153,14 @@ export class AuthService {
     await this.userService.updatePasswordResetToken(user.id, null, null);
   }
 
-  private async generateTokens(
+  async generateTokens(
     user: Omit<
       schema.User,
-      'passwordResetToken' | 'passwordResetExpires' | 'password'
+      'passwordResetToken' | 'passwordResetExpires' | 'password' | 'googleId'
     >,
   ) {
     try {
-      const refreshTokenId = uuidv4();
+      const refreshTokenId = crypto.randomUUID();
       const [accessToken, refreshToken] = await Promise.all([
         this.signToken(user.id, this.jwtConfiguration.accessTokenExpires),
         this.signToken(user.id, this.jwtConfiguration.refreshTokenExpires, {
@@ -204,7 +203,7 @@ export class AuthService {
     await this.mailerService.sendMail({
       to,
       subject: 'Og-style: Восстановление пароля',
-      html: `<p>Восстановите ваш пароль перейдя по <a href='${this.jwtConfiguration.clientUrl}/reset-password?token=${passwordResetToken}&email=${to}'>ссылке</a> </p>`,
+      html: `<p>Восстановите ваш пароль перейдя по <a href='${this.jwtConfiguration.clientUrl}/auth/reset-password?token=${passwordResetToken}&email=${to}'>ссылке</a> </p>`,
     });
   }
 

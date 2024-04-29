@@ -20,24 +20,28 @@ import {
 } from './authentication.constants';
 import { Auth } from './decorators/auth.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { GoogleTokenDto } from './dto/google-token.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { AuthType } from './enums/auth-type.enum';
+import { GoogleAuthenticationService } from './social/google/google-authentication.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly configService: ConfigService<Env, true>,
+    private readonly googleAuthService: GoogleAuthenticationService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
+    console.log(signUpDto);
     await this.authService.signUp(signUpDto);
-    return 'ok';
+    return successResponse('Вы успешно зарегистрировались');
   }
 
   @HttpCode(HttpStatus.OK)
@@ -57,11 +61,34 @@ export class AuthController {
       Number(this.configService.get('REFRESH_COOKIE_MAX_AGE')),
     );
 
-    return successResponse({
-      data: Object.fromEntries(
+    return successResponse(
+      Object.fromEntries(
         Object.entries(user).filter(([key]) => key !== 'password'),
       ),
-    });
+    );
+  }
+
+  @Post('/google')
+  async authenticate(
+    @Body() tokenDto: GoogleTokenDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { user, accessToken, refreshToken } =
+      await this.googleAuthService.authenticate(tokenDto);
+
+    this.attachTokensToCookie(
+      res,
+      accessToken,
+      refreshToken,
+      Number(this.configService.get('ACCESS_COOKIE_MAX_AGE')),
+      Number(this.configService.get('REFRESH_COOKIE_MAX_AGE')),
+    );
+
+    return successResponse(
+      Object.fromEntries(
+        Object.entries(user).filter(([key]) => key !== 'password'),
+      ),
+    );
   }
 
   @HttpCode(HttpStatus.OK)
@@ -74,6 +101,8 @@ export class AuthController {
     await this.authService.logout(userId);
 
     this.attachTokensToCookie(res, '', '', 0, 0);
+
+    return successResponse('Вы вышли из аккаунта');
   }
 
   @HttpCode(HttpStatus.OK)
@@ -85,18 +114,16 @@ export class AuthController {
   ) {
     await this.authService.updatePassword(userId, updatePasswordDto);
 
-    return successResponse({
-      message: 'Пароль успешно изменен',
-    });
+    return successResponse('Пароль успешно изменен');
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('forgot-password')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     await this.authService.forgotPassword(forgotPasswordDto);
-    return successResponse({
-      message: 'Письмо с инструкциями по сбросу пароля выслано на почту',
-    });
+    return successResponse(
+      'Письмо с инструкциями по сбросу пароля выслано на почту',
+    );
   }
 
   @Patch('reset-password')

@@ -14,7 +14,10 @@ export class UserService {
     id: number,
     withPassword = false,
   ): Promise<
-    Omit<schema.User, 'passwordResetExpires' | 'passwordResetToken'>
+    Omit<
+      schema.User,
+      'passwordResetExpires' | 'passwordResetToken' | 'googleId'
+    >
   > | null {
     const user = await this.db
       .select({
@@ -37,7 +40,10 @@ export class UserService {
     email: string,
     withPassword: boolean = false,
   ): Promise<
-    Omit<schema.User, 'passwordResetExpires' | 'passwordResetToken'>
+    Omit<
+      schema.User,
+      'passwordResetExpires' | 'passwordResetToken' | 'googleId'
+    >
   > | null {
     const user = await this.db
       .select({
@@ -54,6 +60,19 @@ export class UserService {
     if (!user[0]) return null;
 
     return user[0];
+  }
+
+  async getByTokenId(
+    tokenId: string,
+    key: 'googleId',
+  ): Promise<
+    Omit<schema.User, 'passwordResetExpires' | 'passwordResetToken'>
+  > | null {
+    const user = await this.db
+      .select()
+      .from(schema.user)
+      .where(and(eq(schema.user[key], tokenId)));
+    return user[0] ?? null;
   }
 
   async getByPasswordResetExpires(email: string): Promise<schema.User> | null {
@@ -75,6 +94,40 @@ export class UserService {
       email,
       password: hashedPassword,
     });
+
+    return user[0];
+  }
+
+  async createFromOauth(
+    email: string,
+    token: string,
+    key: 'googleId',
+    avatar?: string,
+    name?: string,
+  ): Promise<
+    Required<
+      Omit<
+        schema.NewUser,
+        'passwordResetToken' | 'passwordResetExpires' | 'googleId'
+      >
+    >
+  > {
+    const user = await this.db
+      .insert(schema.user)
+      .values({
+        email,
+        [key]: token,
+        ...(avatar && { avatar }),
+        ...(name && { name }),
+      })
+      .returning({
+        name: schema.user.name,
+        avatar: schema.user.avatar,
+        role: schema.user.role,
+        email: schema.user.email,
+        id: schema.user.id,
+        password: schema.user.password,
+      });
 
     return user[0];
   }

@@ -9,6 +9,10 @@ import { AuthService } from './authentication/auth.service';
 import { AuthGuard } from './authentication/guards/auth.guard';
 import { BcryptService } from './authentication/hashing/bcrypt.service';
 import { HashingService } from './authentication/hashing/hashing.service';
+import socialConfig from './authentication/social/config/social.config';
+import { GithubAuthenticationController } from './authentication/social/github/github-authentication.controller';
+import { GithubAuthenticationService } from './authentication/social/github/github-authentication.service.js';
+import { GoogleAuthenticationService } from './authentication/social/google/google-authentication.service';
 import { RoleGuard } from './authorization/guards/role.guard';
 import jwtConfig from './config/jwt.config';
 
@@ -18,9 +22,10 @@ import jwtConfig from './config/jwt.config';
     UserModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
+    ConfigModule.forFeature(socialConfig),
   ],
 
-  controllers: [AuthController],
+  controllers: [AuthController, GithubAuthenticationController],
   providers: [
     AuthService,
     {
@@ -35,6 +40,8 @@ import jwtConfig from './config/jwt.config';
       provide: APP_GUARD,
       useClass: RoleGuard,
     },
+    GoogleAuthenticationService,
+    GithubAuthenticationService,
   ],
 })
 export class IamModule {}

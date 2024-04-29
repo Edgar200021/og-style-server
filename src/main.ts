@@ -10,6 +10,12 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api/v1');
   app.use(cookieParser(configService.get('COOKIE_SECRET')));
+  app.enableCors({
+    //origin: 'http://localhost:5173',
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
