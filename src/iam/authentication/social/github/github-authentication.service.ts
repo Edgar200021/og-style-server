@@ -72,15 +72,6 @@ export class GithubAuthenticationService implements OnModuleInit {
 
         return { user, accessToken, refreshToken };
       } else {
-        const isExists = await this.userService.getByEmail(email);
-        if (isExists) {
-          await this.userService.updateOauthId(isExists.id, 'githubId', id);
-          const { accessToken, refreshToken } =
-            await this.authService.generateTokens(isExists);
-
-          return { user: isExists, accessToken, refreshToken };
-        }
-
         const newUser = await this.userService.createFromOauth(
           email,
           id,
@@ -88,8 +79,6 @@ export class GithubAuthenticationService implements OnModuleInit {
           avatar_url,
           name,
         );
-
-        console.log(newUser);
 
         const { accessToken, refreshToken } =
           await this.authService.generateTokens(newUser);

@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "product" (
 	"description" text NOT NULL,
 	"price" numeric(5, 0) NOT NULL,
 	"discounted_price" numeric(5, 0),
-	"discount" integer,
+	"discount" integer DEFAULT 0,
 	"category" text NOT NULL,
 	"sub_category" text NOT NULL,
 	"images" text[] NOT NULL,
@@ -33,13 +33,15 @@ CREATE TABLE IF NOT EXISTS "product" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"email" text NOT NULL,
-	"password" text NOT NULL,
+	"email" text,
+	"password" text,
 	"name" text,
 	"avatar" text,
 	"password_reset_expires" timestamp with time zone,
 	"password_reset_token" text,
 	"role" role[] DEFAULT '{user}'::role[],
+	"google_id" text,
+	"github_id" integer,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

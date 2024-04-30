@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1714282875022,
-      "tag": "0000_wise_lord_hawal",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1714289312547,
-      "tag": "0001_dark_sugar_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1714289433573,
-      "tag": "0002_concerned_lady_ursula",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1714455990692,
-      "tag": "0003_calm_bruce_banner",
+      "when": 1714462461550,
+      "tag": "0000_familiar_molten_man",
       "breakpoints": true
     }
   ]

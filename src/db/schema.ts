@@ -40,7 +40,7 @@ export const product = pgTable('product', {
   description: text('description').unique().notNull(),
   price: decimal('price', { precision: 5, scale: 0 }).notNull(),
   discountedPrice: decimal('discounted_price', { precision: 5, scale: 0 }),
-  discount: integer('discount'),
+  discount: integer('discount').default(0),
   category: text('category').notNull(),
   subCategory: text('sub_category').notNull(),
   images: text('images').array().notNull(),

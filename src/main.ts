@@ -1,6 +1,7 @@
-import { ValidationPipe } from '@nestjs/common';
+import { HttpException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
@@ -17,6 +18,18 @@ async function bootstrap() {
     credentials: true,
   });
 
+  const config = new DocumentBuilder()
+    .setTitle('Og Style')
+    .setDescription('E-commerce')
+    .setVersion('1.0')
+    .addTag('shoes', 'clothes')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document, {
+    useGlobalPrefix: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -24,6 +37,27 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transformOptions: {
         enableImplicitConversion: true,
+      },
+      exceptionFactory: (errors) => {
+        const collection = new Map();
+
+        errors.map(({ property, constraints, value }) => {
+          const arrayFromConstraints = Object.values(constraints);
+          collection.set(
+            property,
+            value === undefined
+              ? `Заполните это поле`
+              : arrayFromConstraints.at(-1),
+          );
+        });
+
+        return new HttpException(
+          {
+            status: 'failed',
+            errors: Object.fromEntries(collection),
+          },
+          400,
+        );
       },
     }),
   );

@@ -1,0 +1,181 @@
+{
+  "nike": "nike",
+  "data": [
+    {
+      "id": 2,
+      "name": "мужские баскетбольные кроссовки Nike Zoom Freak 5 EP ",
+      "description": "Nike Zoom Freak 5 — пятая именная модель двукратного MVP и чемпиона НБА Янниса Адетокумбо.- Верх пары выполнен из комбинации текстиля, искусственной кожи и многослойной синтетики. Язычок сделан из перфорированной сетки, а набивка из неопрена и поролона.- Протектор сделан из высококачественного каучука XDR (Extra Durable Rubber). Рисунок подмётки разделен на две части: узор спереди представляет множество маленьких лого Янниса, а сзади — крупная ёлочка, выполненная по технологии SMEAR.- Широкая плоская подошва с аутригером, высокий задник и 6 петель динамической шнуровки обеспечивают комфортную и безопасную фиксацию стопы.- За мягкость, возврат энергии и отзывчивость в данной модели отвечают премиальный пеноматериал Cushlon и большой баллон Zoom Air в передней части.",
+      "price": 21500,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862179/og-style/file_huqguk.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862179/og-style/file_ccemq2.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862179/og-style/file_asee1n.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862179/og-style/file_sqweqs.jpg"
+      ],
+      "size": ["38", "40", "41", "41.5", "42", "43", "44", "46"],
+      "materials": ["синтетика", "текстиль", "резина"],
+      "colors": ["#8000FF", "#00a550"],
+      "brand": "nike"
+    },
+    {
+      "id": 3,
+      "name": "кроссовки Nike Air Max 90 NRG",
+      "description": "Бежевые кроссовки Air Max 90 NRG в расцветке 'Shimmer Polka Dot' от бренда Nike. Верх модели выполнен из парусины и креплён вставками из натуральной кожи и замши. Парусина с принтом в горошек отлично сочетается с полупрозрачными вставками TPU и вышивкой в виде кругов на язычке.Air Max 90 — культовая модель кроссовок от бренда Nike, вышедшая в 1990-м году. Изначально названные Air Max III, так как это была третья модель линейки, кроссовки обладали инновационной видимой амортизацией и промежуточной подошвой из PU (полиуретана), что обеспечивало самую отзывчивую на тот момент амортизацию. В 1990-х эта была модель для бега и занятий спортом, но с появлением новых технологий модель перешла в lifestyle. Сейчас Air Max 90 самая узнаваемая модель линейки Air Max от Nike.",
+      "price": 17490,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862543/og-style/file_apdirp.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862543/og-style/file_u7q7w5.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862543/og-style/file_rwijvt.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712862543/og-style/file_egymk0.jpg"
+      ],
+      "size": ["41", "41.5", "42"],
+      "materials": ["синтетика", "текстиль", "резина", "кожа"],
+      "colors": ["#FFEFDF"],
+      "brand": "nike"
+    },
+    {
+      "id": 5,
+      "name": "мужские кроссовки Nike Air Max SC ",
+      "description": "Кроссовки Air Max SC от Nike в цветовом решении «White University Red», сфокусированном на ярких красных деталях и серебряном свуше. Верх пары выполнен из натуральной и искусственной кожи, а также оснащен вставками из прочного текстиля, которые позволяют ноге дышать.Air Max SC — повседневная пара Nike со свежим взглядом на первые силуэты Air Max. Помимо видимой воздушной прослойки эти кроссовки отличает лаконичный верх, созданный из необычного сочетания прочных материалов.",
+      "price": 17990,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863127/og-style/file_drtzph.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863127/og-style/file_yr10g2.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863127/og-style/file_vksr9v.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863127/og-style/file_zizyoe.jpg"
+      ],
+      "size": ["40", "41", "41.5", "42", "43", "44"],
+      "materials": ["синтетика", "текстиль", "резина", "кожа"],
+      "colors": ["#FFFFFF", "#FF0000"],
+      "brand": "nike"
+    },
+    {
+      "id": 6,
+      "name": "кроссовки Nike Dunk Low ",
+      "description": "Кроссовки Dunk Low от бренда Nike в расцветке «Athletic Department» — универсальная пара, идеально подходящая для ежедневной носки. Верх из сочетания прочного канваса и фактурной замши дополнен красной кожей на свуше и заднике. Откройте раздел обуви Nike на официальном сайте basketshop.ru, чтобы найти другие удобные кроссовки для города, бега, активного отдыха и путешествий.Впервые Nike Dunk были представлены в 1985 году. Их дизайнером стал Питер Мур, один из самых влиятельных дизайнеров в истории бренда. Благодаря своим многочисленным расцветкам Dunk выгодно выделялись из серии других релизов. Силуэты Dunk – воплощение спортивного стиля и верности классическому баскетбольному дизайну.",
+      "price": 19000,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863388/og-style/file_kixmrf.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863388/og-style/file_ylwm7r.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863388/og-style/file_x12lvs.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863388/og-style/file_diywrk.jpg"
+      ],
+      "size": ["41", "42"],
+      "materials": ["текстиль", "резина", "кожа"],
+      "colors": ["#FFEFDF"],
+      "brand": "nike"
+    },
+    {
+      "id": 7,
+      "name": "мужские кроссовки Nike Air Force 1 '07 LV8",
+      "description": "Кроссовки Air Force 1 '07 LV8 от бренда Nike в расцветке «Game Royal». Верх этой пары сделан из сочетания натуральной и искусственной кожи, а также дополнен перфорацией в области пальцев для воздухопроницаемости и мягким язычком для дополнительного комфорта. Откройте раздел Nike на официальном сайте basketshop.ru, чтобы найти другие удобные кроссовки на каждый день.Air Force 1 — кроссовки, представленные в 1982 году. Их автор, дизайнер Брюс Килгор, вдохновлялся президентским одноимённым самолётом. После дебюта Air Force 1 быстро завоевали репутацию среди баскетболистов, а затем стали самой популярной и продаваемой моделью Nike. Cейчас эти кроссовки — это синоним абсолютной классики.",
+      "price": 20000,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863601/og-style/file_smqrsg.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863601/og-style/file_iguy3p.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863601/og-style/file_v6wer3.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712863601/og-style/file_lvcvdz.jpg"
+      ],
+      "size": ["40", "41", "41.5"],
+      "materials": ["текстиль", "резина", "кожа", "синтетика"],
+      "colors": ["#FFFFFF", "#0000FF"],
+      "brand": "nike"
+    },
+    {
+      "id": 9,
+      "name": "мужские кроссовки Nike Dunk Hi Retro ",
+      "description": "Кроссовки Dunk Hi Retro от бренда Nike в классической черно-белой палитре. Верх выполнен из натуральной гладкой кожи и дополнен перфорацией на носке, мягким бортиком и язычком. Откройте раздел Nike на официальном сайте basketshop.ru, где найдете больше интересных кроссовок для баскетбола и повседневной носки. При заказе от 9000 рублей вы получите бесплатную доставку.Nike Dunk — культовая классика Nike, представленная 1985 году. Эти кроссовки создал Питер Мур, один из самых влиятельных дизайнеров бренда. Благодаря обилию расцветок кроссовки Dunk выгодно выделялись среди фоне всего, что было представлено на рынке.",
+      "price": 20999,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895280/og-style/file_laevkv.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895280/og-style/file_snbymj.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895280/og-style/file_rgpaxx.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895280/og-style/file_rth2k7.jpg"
+      ],
+      "size": ["42"],
+      "materials": ["текстиль", "резина", "кожа"],
+      "colors": ["#FFFFFF", "#000000"],
+      "brand": "nike"
+    }
+  ],
+  "adidas": "adidas",
+  "data_2": [
+    {
+      "id": 10,
+      "name": "мужские кроссовки adidas Gazelle",
+      "description": "Уже классическая городская модель Gazelle с отсылками к футбольному прошлому. Верх из натуральной замши с контрастными фирменными тремя полосками адидас. Внутренняя часть задника выполнена из кожи. ",
+      "price": 12490,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895550/og-style/file_yncwbd.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895550/og-style/file_p4ffej.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895550/og-style/file_t0i6r6.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895550/og-style/file_ltuy5k.jpg"
+      ],
+      "size": ["41", "42.5", "43", "46"],
+      "materials": ["текстиль", "резина", "кожа"],
+      "colors": ["#0000ff"]
+    },
+    {
+      "id": 11,
+      "name": "мужские кроссовки adidas Campus 00s",
+      "description": "Переиздание классической модели Campus 80-х годов от adidas. Объёмный верх модели выполнен из замши синего цвета и дополнен укрупнённым брендингом three stripes. Прямой силуэт посажен на классический мидсоль кремового оттенка. GUM подмётка с цепким протектором завершают дизайн",
+      "price": 18990,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895885/og-style/file_y7szbj.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895886/og-style/file_nuyvt9.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895885/og-style/file_p41lec.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712895885/og-style/file_y7wqcb.jpg"
+      ],
+      "size": ["40.5", "41", "42"],
+      "materials": ["резина", "замш"],
+      "colors": ["#0000ff"]
+    },
+    {
+      "id": 12,
+      "name": "мужские кроссовки adidas Samba OG",
+      "description": "Мужские кроссовки adidas Samba OG в бело-зелёной расцветке. Натуральная кожа и замша серого цвета для верха кроссовок с акцентными зелёными полосками и вставкой на пятке — это отличный вариант для носки тёплой осенью/весной. Прямая подошва медового цвета из резины с цепким протектором отлично дополняет образ.Adidas Samba — это культовая модель кроссовок, которая была разработана для использования на футбольных полях. Они имеют классический дизайн с кожаным верхом и замшевыми деталями, что придает им элегантный и стильный вид.",
+      "price": 19990,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896078/og-style/file_skyrjh.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896078/og-style/file_i77zns.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896078/og-style/file_mlt06g.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896078/og-style/file_pksgz3.jpg"
+      ],
+      "size": ["36.5", "37", "37.5"],
+      "materials": ["резина", "замш", "кожа"],
+      "colors": ["#FFFFFF"]
+    },
+    {
+      "id": 13,
+      "name": "женские кроссовки adidas Forum Bold W",
+      "description": "Низкие женские кроссовки в монохромной чёрной расцветке от бренда adidas – Forum Bold W. Верх модели выполнен натуральной замши с перфорацией в области пальцев для вентиляции. Отличительной чертой кроссовок Forum Bold W является увеличенная высота подошвы. Вариант для тёплой сухой погоды. 25% верха кроссовок выполнено на 50% из переработанных материалов благодаря партнёрству с альянсом 'END PLASTIC WASTE'.Forum – некогда баскетбольная модель от немецкого бренда adidas, вышедшие в 1984 году. Тогда кроссовки получили невероятный отклик среди баскетболистов, в том числе и от короля воздуха – Майкла Джордана. Благодаря верхнему ремешку и дополнительным петлям для шнурков обеспечивалась дополнительная фиксация. С приходом новых технологий для баскетбольных моделей, Forum перешёл в lifestyle и закрепился там благодаря артистам, скейтбордистам и другим популярным личностям, которые носили эти кроссовки вне корта.",
+      "price": 15490,
+      "discountedPrice": 10843,
+      "discount": 30,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896291/og-style/file_tsclcl.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896291/og-style/file_pslvjs.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896291/og-style/file_vciclw.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896291/og-style/file_l8d0ho.jpg"
+      ],
+      "size": ["36.5", "37", "40"],
+      "materials": ["резина", "замш"],
+      "colors": ["#000000"]
+    },
+    {
+      "id": 14,
+      "name": "детские баскетбольные кроссовки adidas D.O.N. Issue 3 C ",
+      "description": "adidas D.O.N. Issue #3 – третья именная модель звезды НБА Донована Митчелла. Детская версия баскетбольных кроссовок Донована отличается эластичным ремешком на шнуровке, мягким и упругим пеноматериалом Bounce и отличной поддержкой стопы.",
+      "price": 9990,
+      "images": [
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896478/og-style/file_yulzao.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896478/og-style/file_n5kpvf.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896478/og-style/file_zu4ctz.jpg",
+        "https://res.cloudinary.com/dcnl3z4ll/image/upload/v1712896478/og-style/file_tqhlwl.jpg"
+      ],
+      "size": ["27", "28", "29"],
+      "materials": ["резина", "замш"],
+      "colors": ["#8000FF"]
+    }
+  ]
+}

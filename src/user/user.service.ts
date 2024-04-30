@@ -121,6 +121,10 @@ export class UserService {
         ...(avatar && { avatar }),
         ...(name && { name }),
       })
+      .onConflictDoUpdate({
+        target: schema.user.email,
+        set: { [key]: oauthId },
+      })
       .returning({
         name: schema.user.name,
         avatar: schema.user.avatar,
@@ -140,19 +144,6 @@ export class UserService {
         ...(email && { email }),
         ...(name && { name }),
         ...(avatar && { avatar }),
-      })
-      .where(eq(schema.user.id, userId));
-  }
-
-  async updateOauthId(
-    userId: number,
-    key: 'googleId' | 'githubId',
-    oauthId: string | number,
-  ) {
-    await this.db
-      .update(schema.user)
-      .set({
-        [key]: oauthId,
       })
       .where(eq(schema.user.id, userId));
   }

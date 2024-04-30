@@ -10,9 +10,13 @@ import {
 } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Env } from 'env';
 import { Response } from 'express';
+import { ApiSuccessResponse } from 'src/common/swagger/apiSuccessResponse';
+import { UserModel } from 'src/common/swagger/models/user-model.class';
 import { successResponse } from 'src/common/utils/apiResponse';
+import * as schema from 'src/db/schema';
 import { User } from '../decorators/user.decorator';
 import { AuthService } from './auth.service';
 import {
@@ -28,9 +32,11 @@ import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { AuthType } from './enums/auth-type.enum';
+import { SignInResponse } from './interfaces/sign-in.response';
 import { GithubAuthenticationService } from './social/github/github-authentication.service';
 import { GoogleAuthenticationService } from './social/google/google-authentication.service';
 
+@ApiTags('Аутентификация / авторизация')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -40,6 +46,8 @@ export class AuthController {
     private readonly githubAuthService: GithubAuthenticationService,
   ) {}
 
+  @ApiOperation({ summary: 'Создание аккаунта' })
+  //  @ApiResponse({ status: 201 })
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
@@ -48,12 +56,20 @@ export class AuthController {
     return successResponse('Вы успешно зарегистрировались');
   }
 
+  @ApiOperation({ summary: 'Вход в аккаунт' })
+  @ApiSuccessResponse(UserModel)
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
   async signIn(
     @Body() signInDto: SignInDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<
+    ReturnType<
+      typeof successResponse<
+        Pick<schema.User, 'id' | 'name' | 'email' | 'avatar' | 'role'>
+      >
+    >
+  > {
     const { user, accessToken, refreshToken } =
       await this.authService.signIn(signInDto);
 
@@ -68,10 +84,11 @@ export class AuthController {
     return successResponse(
       Object.fromEntries(
         Object.entries(user).filter(([key]) => key !== 'password'),
-      ),
+      ) as SignInResponse['user'],
     );
   }
 
+  @ApiOperation({ summary: 'Вход в аккаунт через google аккаунт' })
   @Post('google')
   async authenticate(
     @Body() tokenDto: GoogleTokenDto,
@@ -95,6 +112,7 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Получение url для редиректа на github ' })
   @Get('github')
   generateGithubUrl() {
     const url = this.githubAuthService.generateWebAuthorizationUri();
@@ -102,6 +120,7 @@ export class AuthController {
     return successResponse(url);
   }
 
+  @ApiOperation({ summary: 'Вход в аккаунт через github аккаунт' })
   @Post('github')
   async test(
     @Body() body: GithubSignInDto,
@@ -125,6 +144,7 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Выход из аккаунта' })
   @HttpCode(HttpStatus.OK)
   @Auth(AuthType.JWT)
   @Post('logout')
@@ -139,6 +159,7 @@ export class AuthController {
     return successResponse('Вы вышли из аккаунта');
   }
 
+  @ApiOperation({ summary: 'Смена пароля' })
   @HttpCode(HttpStatus.OK)
   @Auth(AuthType.JWT)
   @Patch('update-password')
@@ -151,6 +172,7 @@ export class AuthController {
     return successResponse('Пароль успешно изменен');
   }
 
+  @ApiOperation({ summary: 'Запрос на сброс пароля' })
   @HttpCode(HttpStatus.OK)
   @Post('forgot-password')
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
@@ -160,6 +182,7 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Сброс пароля' })
   @Patch('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     await this.authService.resetPassword(resetPasswordDto);
