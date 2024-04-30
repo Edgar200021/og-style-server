@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Inject,
   Injectable,
   OnModuleInit,
@@ -40,7 +39,7 @@ export class GoogleAuthenticationService implements OnModuleInit {
 
       const { name, picture, email, sub: googleId } = loginTicket.getPayload();
 
-      const user = await this.userService.getByTokenId(googleId, 'googleId');
+      const user = await this.userService.getByOauthId(googleId, 'googleId');
 
       if (user) {
         const { accessToken, refreshToken } =
@@ -49,8 +48,18 @@ export class GoogleAuthenticationService implements OnModuleInit {
         return { accessToken, refreshToken, user };
       } else {
         const isExists = await this.userService.getByEmail(email);
-        if (isExists)
-          throw new BadRequestException('Пользователь уже существует');
+        if (isExists) {
+          await this.userService.updateOauthId(
+            isExists.id,
+            'googleId',
+            googleId,
+          );
+
+          const { accessToken, refreshToken } =
+            await this.authService.generateTokens(isExists);
+
+          return { accessToken, refreshToken, user: isExists };
+        }
 
         const newUser = await this.userService.createFromOauth(
           email,

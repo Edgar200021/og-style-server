@@ -37,6 +37,7 @@
     "cookie-parser": "^1.4.6",
     "drizzle-orm": "^0.30.9",
     "google-auth-library": "^9.9.0",
+    "nestjs-form-data": "^1.9.7",
     "nodemailer": "^6.9.13",
     "octokit": "^3.2.0",
     "pg": "^8.11.5",

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Patch,
@@ -20,12 +21,14 @@ import {
 } from './authentication.constants';
 import { Auth } from './decorators/auth.decorator';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { GithubSignInDto } from './dto/github-sign-in.dto';
 import { GoogleTokenDto } from './dto/google-token.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { AuthType } from './enums/auth-type.enum';
+import { GithubAuthenticationService } from './social/github/github-authentication.service';
 import { GoogleAuthenticationService } from './social/google/google-authentication.service';
 
 @Controller('auth')
@@ -34,6 +37,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly configService: ConfigService<Env, true>,
     private readonly googleAuthService: GoogleAuthenticationService,
+    private readonly githubAuthService: GithubAuthenticationService,
   ) {}
 
   @HttpCode(HttpStatus.CREATED)
@@ -68,13 +72,43 @@ export class AuthController {
     );
   }
 
-  @Post('/google')
+  @Post('google')
   async authenticate(
     @Body() tokenDto: GoogleTokenDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const { user, accessToken, refreshToken } =
       await this.googleAuthService.authenticate(tokenDto);
+
+    this.attachTokensToCookie(
+      res,
+      accessToken,
+      refreshToken,
+      Number(this.configService.get('ACCESS_COOKIE_MAX_AGE')),
+      Number(this.configService.get('REFRESH_COOKIE_MAX_AGE')),
+    );
+
+    return successResponse(
+      Object.fromEntries(
+        Object.entries(user).filter(([key]) => key !== 'password'),
+      ),
+    );
+  }
+
+  @Get('github')
+  generateGithubUrl() {
+    const url = this.githubAuthService.generateWebAuthorizationUri();
+
+    return successResponse(url);
+  }
+
+  @Post('github')
+  async test(
+    @Body() body: GithubSignInDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken, user } =
+      await this.githubAuthService.getUser(body);
 
     this.attachTokensToCookie(
       res,

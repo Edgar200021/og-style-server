@@ -10,7 +10,6 @@ import { AuthGuard } from './authentication/guards/auth.guard';
 import { BcryptService } from './authentication/hashing/bcrypt.service';
 import { HashingService } from './authentication/hashing/hashing.service';
 import socialConfig from './authentication/social/config/social.config';
-import { GithubAuthenticationController } from './authentication/social/github/github-authentication.controller';
 import { GithubAuthenticationService } from './authentication/social/github/github-authentication.service.js';
 import { GoogleAuthenticationService } from './authentication/social/google/google-authentication.service';
 import { RoleGuard } from './authorization/guards/role.guard';
@@ -25,7 +24,7 @@ import jwtConfig from './config/jwt.config';
     ConfigModule.forFeature(socialConfig),
   ],
 
-  controllers: [AuthController, GithubAuthenticationController],
+  controllers: [AuthController],
   providers: [
     AuthService,
     {

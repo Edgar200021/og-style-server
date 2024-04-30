@@ -3,6 +3,7 @@ import { and, eq, gt } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB_TOKEN } from 'src/db/db.constants';
 import * as schema from 'src/db/schema';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -16,7 +17,7 @@ export class UserService {
   ): Promise<
     Omit<
       schema.User,
-      'passwordResetExpires' | 'passwordResetToken' | 'googleId'
+      'passwordResetExpires' | 'passwordResetToken' | 'googleId' | 'githubId'
     >
   > | null {
     const user = await this.db
@@ -42,7 +43,7 @@ export class UserService {
   ): Promise<
     Omit<
       schema.User,
-      'passwordResetExpires' | 'passwordResetToken' | 'googleId'
+      'passwordResetExpires' | 'passwordResetToken' | 'googleId' | 'githubId'
     >
   > | null {
     const user = await this.db
@@ -62,9 +63,9 @@ export class UserService {
     return user[0];
   }
 
-  async getByTokenId(
-    tokenId: string,
-    key: 'googleId',
+  async getByOauthId(
+    tokenId: string | number,
+    key: 'googleId' | 'githubId',
   ): Promise<
     Omit<schema.User, 'passwordResetExpires' | 'passwordResetToken'>
   > | null {
@@ -100,15 +101,15 @@ export class UserService {
 
   async createFromOauth(
     email: string,
-    token: string,
-    key: 'googleId',
+    oauthId: string | number,
+    key: 'googleId' | 'githubId',
     avatar?: string,
     name?: string,
   ): Promise<
     Required<
       Omit<
         schema.NewUser,
-        'passwordResetToken' | 'passwordResetExpires' | 'googleId'
+        'passwordResetToken' | 'passwordResetExpires' | 'googleId' | 'githubId'
       >
     >
   > {
@@ -116,7 +117,7 @@ export class UserService {
       .insert(schema.user)
       .values({
         email,
-        [key]: token,
+        [key]: oauthId,
         ...(avatar && { avatar }),
         ...(name && { name }),
       })
@@ -130,6 +131,30 @@ export class UserService {
       });
 
     return user[0];
+  }
+
+  async updateUser(userId: number, { email, avatar, name }: UpdateUserDto) {
+    await this.db
+      .update(schema.user)
+      .set({
+        ...(email && { email }),
+        ...(name && { name }),
+        ...(avatar && { avatar }),
+      })
+      .where(eq(schema.user.id, userId));
+  }
+
+  async updateOauthId(
+    userId: number,
+    key: 'googleId' | 'githubId',
+    oauthId: string | number,
+  ) {
+    await this.db
+      .update(schema.user)
+      .set({
+        [key]: oauthId,
+      })
+      .where(eq(schema.user.id, userId));
   }
 
   async updatePasswordResetToken(

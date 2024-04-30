@@ -13,7 +13,7 @@ export const role = pgEnum('role', ['user', 'admin']);
 
 export const user = pgTable('users', {
   id: serial('id').primaryKey(),
-  email: text('email').unique().notNull(),
+  email: text('email').unique(),
   password: text('password'),
   name: text('name'),
   avatar: text('avatar'),
@@ -23,6 +23,7 @@ export const user = pgTable('users', {
   passwordResetToken: text('password_reset_token'),
   role: role('role').array().default(['user']),
   googleId: text('google_id'),
+  githubId: integer('github_id'),
 });
 
 export type User = typeof user.$inferSelect;

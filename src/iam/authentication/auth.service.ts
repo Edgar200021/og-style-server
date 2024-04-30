@@ -156,7 +156,11 @@ export class AuthService {
   async generateTokens(
     user: Omit<
       schema.User,
-      'passwordResetToken' | 'passwordResetExpires' | 'password' | 'googleId'
+      | 'passwordResetToken'
+      | 'passwordResetExpires'
+      | 'password'
+      | 'googleId'
+      | 'githubId'
     >,
   ) {
     try {
