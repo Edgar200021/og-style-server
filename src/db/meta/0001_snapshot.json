@@ -1,6 +1,6 @@
 {
-  "id": "0cba6037-1521-4063-8fb4-f57bb75343ef",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "a65f3d3d-7613-44cb-b568-2a193694ee91",
+  "prevId": "0cba6037-1521-4063-8fb4-f57bb75343ef",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -94,13 +94,13 @@
         },
         "price": {
           "name": "price",
-          "type": "numeric(5, 0)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "discounted_price": {
           "name": "discounted_price",
-          "type": "numeric(5, 0)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },

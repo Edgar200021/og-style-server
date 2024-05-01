@@ -1,11 +1,26 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  and,
+  arrayOverlaps,
+  between,
+  count,
+  eq,
+  inArray,
+  or,
+  sql,
+} from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB_TOKEN } from 'src/db/db.constants';
 import * as schema from 'src/db/schema';
 import { CreateProductDto } from './dto/create-product.dto';
+import { GetFiltersDto } from './dto/get-filters.dto';
+import { ProductFilterDto } from './dto/product-filters.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { GetProductsResponse } from './interfaces/get-products-response.interface';
 @Injectable()
 export class ProductService {
+  static readonly LIMIT = 8;
+
   constructor(@Inject(DB_TOKEN) private db: NodePgDatabase<typeof schema>) {}
 
   async get(id: number): Promise<schema.Product> | null {
@@ -17,29 +32,118 @@ export class ProductService {
     return product[0] ?? null;
   }
 
-  async getAll(): Promise<schema.Product[]> {
-    return this.db.select().from(schema.product);
+  async getAll({
+    limit = ProductService.LIMIT,
+    page = 1,
+    brand,
+    category,
+    colors,
+    size,
+    subCategory,
+    material,
+    maxPrice,
+    minPrice = 0,
+  }: ProductFilterDto): Promise<GetProductsResponse> {
+    let brandIds: number[];
+
+    if (brand) {
+      const ids = await this.db
+        .select({
+          ids: sql<number[]>`array_agg(id)`,
+        })
+        .from(schema.brand)
+        .where(inArray(schema.brand.name, brand));
+
+      brandIds = ids[0].ids;
+    }
+
+    const filters = and(
+      category && eq(schema.product.category, category),
+      category && eq(schema.product.subCategory, subCategory),
+      size && arrayOverlaps(schema.product.size, size),
+      material && arrayOverlaps(schema.product.materials, material),
+      colors && arrayOverlaps(schema.product.colors, colors),
+      brand && inArray(schema.product.brandId, brandIds),
+      maxPrice && between(schema.product.price, minPrice, maxPrice),
+    );
+
+    const [products, totalProducts] = await Promise.all([
+      this.db
+        .select()
+        .from(schema.product)
+        .where(filters)
+        .offset(page * limit - limit)
+        .limit(limit),
+      this.db.select({ count: count() }).from(schema.product).where(filters),
+    ]);
+
+    const totalPages = Math.ceil(totalProducts[0].count / limit);
+
+    return { products, totalPages };
   }
 
   async create(createProductDto: CreateProductDto): Promise<schema.NewProduct> {
+    const isExist = await this.db
+      .select()
+      .from(schema.product)
+      .where(
+        or(
+          eq(schema.product.name, createProductDto.name),
+          eq(schema.product.description, createProductDto.description),
+        ),
+      );
+
+    if (isExist[0])
+      throw new BadRequestException(
+        `Продукт с таким названием или описанием уже существует`,
+      );
+
     const discountedPrice = createProductDto.discount
       ? createProductDto.price -
         (createProductDto.price * createProductDto.discount) / 100
       : 0;
 
-    console.log(createProductDto);
-
-    const user = await this.db
+    const product = await this.db
       .insert(schema.product)
       .values({
         ...createProductDto,
-        price: String(createProductDto.price),
-        discountedPrice: String(discountedPrice),
+        discountedPrice,
         //brandId: sql<number>`SELECT id FROM brand WHERE name = ${createProductDto.brand}`,
-        brandId: 1,
+        brandId: 2,
       })
       .returning();
 
-    return user[0];
+    return product[0];
+  }
+
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    const isExists = await this.get(id);
+    if (!isExists) throw new BadRequestException('Продукт не найден');
+
+    const price = updateProductDto.price ?? isExists.price,
+      discount = updateProductDto.discount ?? isExists.discount,
+      discountedPrice = price - (price * discount) / 100;
+
+    await this.db
+      .update(schema.product)
+      .set({ ...updateProductDto, discount, discountedPrice })
+      .where(eq(schema.product.id, id));
+  }
+
+  async delete(id: number) {
+    const isExist = await this.get(id);
+    if (!isExist) throw new BadRequestException('Продукт не найден');
+
+    await this.db.delete(schema.product).where(eq(schema.product.id, id));
+  }
+
+  async getFilters({ category }: GetFiltersDto) {
+    const result = await this.db
+      .execute(sql`SELECT ARRAY(SELECT DISTINCT UNNEST(size) as s FROM product WHERE category=${category} ORDER BY s ASC) as size, ARRAY(SELECT DISTINCT UNNEST(colors) FROM product WHERE category=${category}) as colors,(SELECT COALESCE(MIN(price),0) FROM product WHERE category=${category}) as min_price,(SELECT COALESCE(MAX(price),0) FROM product WHERE category=${category}) as max_price,(SELECT array_agg(b.name) FROM product JOIN brand as b ON b.id = product.id WHERE category=${category}) as brand ;
+
+`);
+
+    console.log(result);
+    return result.rows[0];
   }
 }

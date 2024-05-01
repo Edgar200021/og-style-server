@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS "product" (
 	"sub_category" text NOT NULL,
 	"images" text[] NOT NULL,
 	"size" text[] NOT NULL,
+	"materials" text[] NOT NULL,
+	"colors" text[] NOT NULL,
 	"brand_id" integer NOT NULL,
 	CONSTRAINT "product_name_unique" UNIQUE("name"),
 	CONSTRAINT "product_description_unique" UNIQUE("description")
