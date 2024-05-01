@@ -9,9 +9,10 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiSuccessResponse } from 'src/common/swagger/apiSuccessResponse';
 import { GetProductsModel } from 'src/common/swagger/models/get-products-model.class';
+import { GetProductFilters } from 'src/common/swagger/models/product-filters-model.class';
 import { successResponse } from 'src/common/utils/apiResponse';
 import { CreateProductDto } from './dto/create-product.dto';
 import { GetFiltersDto } from './dto/get-filters.dto';
@@ -24,6 +25,7 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @ApiOperation({ summary: 'Получить список продуктов' })
   @ApiSuccessResponse(GetProductsModel)
   @Get()
   async getProducts(@Query() productFilterDto: ProductFilterDto) {
@@ -33,11 +35,16 @@ export class ProductController {
     return successResponse({ products, totalPages });
   }
 
+  @ApiOperation({ summary: 'Получить фильтры для продуктов' })
+  @ApiSuccessResponse(GetProductFilters)
   @Get('/filters')
   async getFilters(@Query() getFiltersDto: GetFiltersDto) {
-    return await this.productService.getFilters(getFiltersDto);
+    const filters = await this.productService.getFilters(getFiltersDto);
+
+    return successResponse(filters);
   }
 
+  @ApiOperation({ summary: 'Получить продукт по ID' })
   @Get(':id')
   async getProduct(@Param('id') productId: number) {
     const product = await this.productService.get(productId);
@@ -47,6 +54,7 @@ export class ProductController {
     return successResponse(product);
   }
 
+  @ApiOperation({ summary: 'Создать продукт ' })
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
     const product = await this.productService.create(createProductDto);
@@ -54,6 +62,7 @@ export class ProductController {
     return successResponse(product);
   }
 
+  @ApiOperation({ summary: 'Обновить продукт' })
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -64,6 +73,7 @@ export class ProductController {
     return successResponse('Продукт успешно обновлен');
   }
 
+  @ApiOperation({ summary: 'Удалить продукт' })
   @Delete(':id')
   async delete(@Param('id') id: number) {
     await this.productService.delete(id);

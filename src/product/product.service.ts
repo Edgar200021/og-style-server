@@ -6,6 +6,7 @@ import {
   count,
   eq,
   inArray,
+  lte,
   or,
   sql,
 } from 'drizzle-orm';
@@ -64,7 +65,9 @@ export class ProductService {
       material && arrayOverlaps(schema.product.materials, material),
       colors && arrayOverlaps(schema.product.colors, colors),
       brand && inArray(schema.product.brandId, brandIds),
-      maxPrice && between(schema.product.price, minPrice, maxPrice),
+      maxPrice
+        ? between(schema.product.price, minPrice, maxPrice)
+        : lte(schema.product.price, minPrice),
     );
 
     const [products, totalProducts] = await Promise.all([
@@ -139,11 +142,10 @@ export class ProductService {
 
   async getFilters({ category }: GetFiltersDto) {
     const result = await this.db
-      .execute(sql`SELECT ARRAY(SELECT DISTINCT UNNEST(size) as s FROM product WHERE category=${category} ORDER BY s ASC) as size, ARRAY(SELECT DISTINCT UNNEST(colors) FROM product WHERE category=${category}) as colors,(SELECT COALESCE(MIN(price),0) FROM product WHERE category=${category}) as min_price,(SELECT COALESCE(MAX(price),0) FROM product WHERE category=${category}) as max_price,(SELECT array_agg(b.name) FROM product JOIN brand as b ON b.id = product.id WHERE category=${category}) as brand ;
+      .execute(sql`SELECT ARRAY(SELECT DISTINCT UNNEST(size) as s FROM product WHERE category=${category} ORDER BY s ASC) as size, ARRAY(SELECT DISTINCT UNNEST(colors) FROM product WHERE category=${category}) as colors,(SELECT COALESCE(MIN(price),0) FROM product WHERE category=${category}) as min_price,(SELECT COALESCE(MAX(price),0) FROM product WHERE category=${category}) as max_price,(SELECT array_agg(b.name) FROM product JOIN brand as b ON b.id = product.id WHERE category=${category}) as brands ;
 
 `);
 
-    console.log(result);
     return result.rows[0];
   }
 }
