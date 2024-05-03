@@ -30,6 +30,7 @@ import { UserModule } from './user/user.module';
       inject: [ConfigService],
       useFactory: mailerConfig,
     }),
+
     RedisModule,
   ],
   controllers: [],

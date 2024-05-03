@@ -1,15 +1,26 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   NotFoundException,
   Param,
+  ParseFilePipeBuilder,
   Patch,
   Post,
   Query,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ApiSuccessResponse } from 'src/common/swagger/apiSuccessResponse';
 import { GetProductsModel } from 'src/common/swagger/models/get-products-model.class';
 import { GetProductFilters } from 'src/common/swagger/models/product-filters-model.class';
@@ -23,6 +34,10 @@ import { ProductService } from './product.service';
 @ApiTags('Продукты')
 @Controller('products')
 export class ProductController {
+  private static readonly MAX_FILE_SIZE = 1024 * 1024;
+  private static readonly ALLOWED_MIME_TYPES_REGEX = /.(jpg|jpeg|png)$/;
+  private static readonly MAX_IMAGE_COUNT = 4;
+
   constructor(private readonly productService: ProductService) {}
 
   @ApiOperation({ summary: 'Получить список продуктов' })
@@ -79,5 +94,51 @@ export class ProductController {
     await this.productService.delete(id);
 
     return successResponse('Продукт успешно удален');
+  }
+
+  @ApiOperation({ summary: 'Загрузить изображения для продукта' })
+  @ApiConsumes('multipart/form-data')
+  @ApiOkResponse({ isArray: true, type: 'string' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        images: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  @Post('upload-images')
+  @UseInterceptors(
+    FilesInterceptor('images', ProductController.MAX_IMAGE_COUNT, {
+      dest: '../uploads',
+    }),
+  )
+  async uploadImages(
+    @UploadedFiles(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: ProductController.ALLOWED_MIME_TYPES_REGEX,
+        })
+        .addMaxSizeValidator({
+          maxSize: ProductController.MAX_FILE_SIZE,
+          message: 'Файл слишком большой',
+        })
+        .build(),
+    )
+    files: Array<Express.Multer.File>,
+  ) {
+    if (files.length !== ProductController.MAX_IMAGE_COUNT)
+      throw new BadRequestException(
+        `Количество файлов должно быть ${ProductController.MAX_IMAGE_COUNT}`,
+      );
+
+    const images = await this.productService.uploadImage(files);
+    return successResponse(images);
   }
 }

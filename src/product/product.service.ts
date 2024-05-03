@@ -11,6 +11,7 @@ import {
   sql,
 } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { DB_TOKEN } from 'src/db/db.constants';
 import * as schema from 'src/db/schema';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -22,7 +23,10 @@ import { GetProductsResponse } from './interfaces/get-products-response.interfac
 export class ProductService {
   static readonly LIMIT = 8;
 
-  constructor(@Inject(DB_TOKEN) private db: NodePgDatabase<typeof schema>) {}
+  constructor(
+    @Inject(DB_TOKEN) private db: NodePgDatabase<typeof schema>,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   async get(id: number): Promise<schema.Product> | null {
     const product = await this.db
@@ -147,5 +151,11 @@ export class ProductService {
 `);
 
     return result.rows[0];
+  }
+
+  async uploadImage(files: Express.Multer.File[]) {
+    const images = await this.cloudinaryService.upload(files);
+
+    return images;
   }
 }
