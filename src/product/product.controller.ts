@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   ParseFilePipeBuilder,
@@ -116,7 +118,7 @@ export class ProductController {
   @Post('upload-images')
   @UseInterceptors(
     FilesInterceptor('images', ProductController.MAX_IMAGE_COUNT, {
-      dest: '../uploads',
+      dest: 'src/uploads',
     }),
   )
   async uploadImages(

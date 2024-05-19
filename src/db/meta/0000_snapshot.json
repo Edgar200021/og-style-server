@@ -1,5 +1,5 @@
 {
-  "id": "0cba6037-1521-4063-8fb4-f57bb75343ef",
+  "id": "894807dc-3dc3-4098-aa3d-d64c981c685f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -94,13 +94,13 @@
         },
         "price": {
           "name": "price",
-          "type": "numeric(5, 0)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "discounted_price": {
           "name": "discounted_price",
-          "type": "numeric(5, 0)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },

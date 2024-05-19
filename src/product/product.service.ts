@@ -6,7 +6,7 @@ import {
   count,
   eq,
   inArray,
-  lte,
+  gte,
   or,
   sql,
 } from 'drizzle-orm';
@@ -64,23 +64,20 @@ export class ProductService {
 
     const filters = and(
       category && eq(schema.product.category, category),
-      category && eq(schema.product.subCategory, subCategory),
+      subCategory && eq(schema.product.subCategory, subCategory),
       size && arrayOverlaps(schema.product.size, size),
       material && arrayOverlaps(schema.product.materials, material),
       colors && arrayOverlaps(schema.product.colors, colors),
       brand && inArray(schema.product.brandId, brandIds),
       maxPrice
         ? between(schema.product.price, minPrice, maxPrice)
-        : lte(schema.product.price, minPrice),
+        : gte(schema.product.price, minPrice),
     );
 
     const [products, totalProducts] = await Promise.all([
-      this.db
-        .select()
-        .from(schema.product)
-        .where(filters)
-        .offset(page * limit - limit)
-        .limit(limit),
+      this.db.select().from(schema.product).where(filters),
+      // .offset(page * limit - limit)
+      // .limit(limit),
       this.db.select({ count: count() }).from(schema.product).where(filters),
     ]);
 

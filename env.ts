@@ -21,12 +21,10 @@ export const envSchema = z.object({
   GOOGLE_PROJECT_ID: z.string(),
   GITHUB_CLIENT_SECRET: z.string(),
   GITHUB_CLIENT_ID: z.string(),
-  GITHUB_REDIRECT_URL: z.string(),
   CLOUDINARY_API_KEY: z.coerce.number(),
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_FOLDER: z.string(),
-  MULTER_DEST: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;
