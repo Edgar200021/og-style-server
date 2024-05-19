@@ -10,6 +10,7 @@ import { IamModule } from './iam/iam.module';
 import { ProductModule } from './product/product.module';
 import { RedisModule } from './redis/redis.module';
 import { UserModule } from './user/user.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -30,8 +31,8 @@ import { UserModule } from './user/user.module';
       inject: [ConfigService],
       useFactory: mailerConfig,
     }),
-
     RedisModule,
+    CartModule,
   ],
   controllers: [],
   providers: [],

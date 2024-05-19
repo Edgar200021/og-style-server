@@ -65,6 +65,24 @@ export const cart = pgTable('cart', {
 export type Cart = typeof cart.$inferSelect;
 export type NewCart = typeof cart.$inferInsert;
 
+export const cartProduct = pgTable('cart_product', {
+  id: serial('id').primaryKey(),
+  cartId: integer('cart_id')
+    .notNull()
+    .references(() => cart.id, { onDelete: 'cascade' }),
+  productId: integer('product_id')
+    .notNull()
+    .references(() => product.id, {
+      onDelete: 'cascade',
+    }),
+  quantity: integer('quantity').notNull(),
+  color: text('color').notNull(),
+  size: text('size').notNull(),
+});
+
+export type CartProduct = typeof cartProduct.$inferSelect;
+export type NewCartProduct = typeof cartProduct.$inferInsert;
+
 export const brandRelations = relations(brand, ({ one }) => ({
   product: one(product),
 }));
@@ -84,5 +102,16 @@ export const cartRelations = relations(cart, ({ one }) => ({
   user: one(user, {
     fields: [cart.userId],
     references: [user.id],
+  }),
+}));
+
+export const cartProductRelations = relations(cartProduct, ({ one }) => ({
+  cart: one(cart, {
+    fields: [cartProduct.cartId],
+    references: [cart.id],
+  }),
+  product: one(product, {
+    fields: [cartProduct.productId],
+    references: [product.id],
   }),
 }));

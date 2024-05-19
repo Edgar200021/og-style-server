@@ -15,6 +15,7 @@ import { UserService } from 'src/user/user.service';
 import jwtConfig from '../config/jwt.config';
 
 import { MailerService } from '@nestjs-modules/mailer';
+import { CartService } from 'src/cart/cart.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { SignInDto } from './dto/sign-in.dto';
@@ -26,6 +27,7 @@ import { SignInResponse } from './interfaces/sign-in.response';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly cartService: CartService,
     private readonly hashingService: HashingService,
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
@@ -44,6 +46,7 @@ export class AuthService {
 
     const hashedPassword = await this.hashingService.hash(signUpDto.password);
     const user = await this.userService.create(signUpDto.email, hashedPassword);
+    await this.cartService.create(user.id);
 
     return user;
   }

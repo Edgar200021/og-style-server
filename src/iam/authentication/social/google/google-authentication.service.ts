@@ -18,6 +18,7 @@ export class GoogleAuthenticationService implements OnModuleInit {
 
   constructor(
     private readonly userService: UserService,
+    private readonly cartService: CartService,
     private readonly authService: AuthService,
     @Inject(socialConfig.KEY)
     private readonly socialConfiguration: ConfigType<typeof socialConfig>,
@@ -54,6 +55,7 @@ export class GoogleAuthenticationService implements OnModuleInit {
           picture,
           name,
         );
+        await this.cartService.create(newUser.id);
         const { accessToken, refreshToken } =
           await this.authService.generateTokens(newUser);
 

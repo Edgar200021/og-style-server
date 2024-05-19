@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { CartModule } from 'src/cart/cart.module';
 import { RedisModule } from 'src/redis/redis.module';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './authentication/auth.controller';
@@ -19,6 +20,7 @@ import jwtConfig from './config/jwt.config';
   imports: [
     RedisModule,
     UserModule,
+    CartModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(socialConfig),

@@ -5,8 +5,8 @@ import {
   between,
   count,
   eq,
-  inArray,
   gte,
+  inArray,
   or,
   sql,
 } from 'drizzle-orm';
@@ -28,10 +28,26 @@ export class ProductService {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
-  async get(id: number): Promise<schema.Product> | null {
+  async get(id: number): Promise<schema.Product & { brand: string }> | null {
     const product = await this.db
-      .select()
+      .select({
+        id: schema.product.id,
+        name: schema.product.name,
+        description: schema.product.description,
+        price: schema.product.price,
+        discountedPrice: schema.product.discountedPrice,
+        discount: schema.product.discount,
+        category: schema.product.category,
+        subCategory: schema.product.subCategory,
+        images: schema.product.images,
+        size: schema.product.size,
+        materials: schema.product.materials,
+        colors: schema.product.colors,
+        brandId: schema.product.brandId,
+        brand: schema.brand.name,
+      })
       .from(schema.product)
+      .leftJoin(schema.brand, eq(schema.product.brandId, schema.brand.id))
       .where(eq(schema.product.id, id));
 
     return product[0] ?? null;
@@ -75,9 +91,12 @@ export class ProductService {
     );
 
     const [products, totalProducts] = await Promise.all([
-      this.db.select().from(schema.product).where(filters),
-      // .offset(page * limit - limit)
-      // .limit(limit),
+      this.db
+        .select()
+        .from(schema.product)
+        .where(filters)
+        .offset(page * limit - limit)
+        .limit(limit),
       this.db.select({ count: count() }).from(schema.product).where(filters),
     ]);
 

@@ -4,8 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   NotFoundException,
   Param,
   ParseFilePipeBuilder,
@@ -27,6 +25,9 @@ import { ApiSuccessResponse } from 'src/common/swagger/apiSuccessResponse';
 import { GetProductsModel } from 'src/common/swagger/models/get-products-model.class';
 import { GetProductFilters } from 'src/common/swagger/models/product-filters-model.class';
 import { successResponse } from 'src/common/utils/apiResponse';
+import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
+import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
+import { Role } from 'src/iam/authorization/decorators/role.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { GetFiltersDto } from './dto/get-filters.dto';
 import { ProductFilterDto } from './dto/product-filters.dto';
@@ -71,6 +72,8 @@ export class ProductController {
     return successResponse(product);
   }
 
+  @Auth(AuthType.JWT)
+  @Role('admin')
   @ApiOperation({ summary: 'Создать продукт ' })
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
@@ -79,6 +82,8 @@ export class ProductController {
     return successResponse(product);
   }
 
+  @Auth(AuthType.JWT)
+  @Role('admin')
   @ApiOperation({ summary: 'Обновить продукт' })
   @Patch(':id')
   async update(
@@ -90,6 +95,8 @@ export class ProductController {
     return successResponse('Продукт успешно обновлен');
   }
 
+  @Auth(AuthType.JWT)
+  @Role('admin')
   @ApiOperation({ summary: 'Удалить продукт' })
   @Delete(':id')
   async delete(@Param('id') id: number) {
@@ -115,6 +122,8 @@ export class ProductController {
       },
     },
   })
+  @Auth(AuthType.JWT)
+  @Role('admin')
   @Post('upload-images')
   @UseInterceptors(
     FilesInterceptor('images', ProductController.MAX_IMAGE_COUNT, {

@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { OAuthApp } from 'octokit';
+import { CartService } from 'src/cart/cart.service';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from '../../auth.service';
 import { GithubSignInDto } from '../../dto/github-sign-in.dto';
@@ -22,6 +23,7 @@ export class GithubAuthenticationService implements OnModuleInit {
     private readonly socialConfiguration: ConfigType<typeof socialConfig>,
     private readonly userService: UserService,
     private readonly authService: AuthService,
+    private readonly cartService: CartService,
   ) {}
 
   onModuleInit() {
@@ -66,7 +68,6 @@ export class GithubAuthenticationService implements OnModuleInit {
       const user = await this.userService.getByOauthId(id, 'githubId');
 
       if (user) {
-        console.log('OK');
         const { accessToken, refreshToken } =
           await this.authService.generateTokens(user);
 
@@ -79,6 +80,8 @@ export class GithubAuthenticationService implements OnModuleInit {
           avatar_url,
           name,
         );
+
+        await this.cartService.create(newUser.id);
 
         const { accessToken, refreshToken } =
           await this.authService.generateTokens(newUser);
