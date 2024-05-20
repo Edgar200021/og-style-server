@@ -1,11 +1,10 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { and, count, eq } from 'drizzle-orm';
+import { and, arrayOverlaps, count, eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB_TOKEN } from 'src/db/db.constants';
 import * as schema from 'src/db/schema';
 import { AddCartProductDto } from './dto/add-cart-product.dto';
 import { CartFiltersDto } from './dto/cart-filters.dto';
-import { DeleteCartProductDto } from './dto/delete-cart-product.dto';
 import { UpdateCartProductDto } from './dto/update-cart-product.dto';
 import { GetCartProducts } from './interfaces/get-cart-products.response';
 
@@ -15,7 +14,7 @@ export class CartService {
 
   async getAll(
     userId: schema.User['id'],
-    { limit = 12, page = 2 }: CartFiltersDto,
+    { limit = 12, page = 1 }: CartFiltersDto,
   ): Promise<GetCartProducts> {
     const result = await this.db
       .select({
@@ -26,8 +25,22 @@ export class CartService {
 
     const [products, quantity] = await Promise.all([
       await this.db
-        .select()
+        .select({
+          id: schema.cartProduct.id,
+          productId: schema.cartProduct.productId,
+          quantity: schema.cartProduct.quantity,
+          size: schema.cartProduct.size,
+          color: schema.cartProduct.color,
+          name: schema.product.name,
+          images: schema.product.images,
+          price: schema.product.price,
+          discountedPrice: schema.product.discountedPrice,
+        })
         .from(schema.cartProduct)
+        .leftJoin(
+          schema.product,
+          eq(schema.product.id, schema.cartProduct.productId),
+        )
         .where(eq(schema.cartProduct.cartId, result[0].id))
         .offset(page * limit - limit)
         .limit(limit),
@@ -39,6 +52,7 @@ export class CartService {
 
     const totalPages = Math.ceil(quantity[0].count / limit);
 
+    //@ts-expect-error ---
     return { totalPages, products };
   }
 
@@ -49,9 +63,15 @@ export class CartService {
     const product = await this.db
       .select()
       .from(schema.product)
-      .where(eq(schema.product.id, productId));
+      .where(
+        and(
+          eq(schema.product.id, productId),
+          arrayOverlaps(schema.product.colors, [color]),
+          arrayOverlaps(schema.product.size, [size]),
+        ),
+      );
 
-    if (!product) throw new BadRequestException('Товар не найден');
+    if (!product[0]) throw new BadRequestException('Товар не найден');
 
     const result = await this.db
       .select()
@@ -70,10 +90,10 @@ export class CartService {
       .from(schema.cartProduct)
       .where(filters);
 
-    if (isExist) {
+    if (isExist[0]) {
       await this.db
         .update(schema.cartProduct)
-        .set({ quantity: isExist[0].quantity + 1 })
+        .set({ quantity: isExist[0].quantity + quantity })
         .where(filters);
       return;
     }
@@ -86,23 +106,16 @@ export class CartService {
       quantity,
     });
   }
-
-  async delete(
-    userId: schema.User['id'],
-    { cartProductId }: DeleteCartProductDto,
-  ) {
-    await this.db
-      .delete(schema.cartProduct)
-      .where(eq(schema.cartProduct.id, cartProductId));
-  }
-
-  async update(
-    userId: schema.User['id'],
-    { quantity, cartProductId }: UpdateCartProductDto,
-  ) {
+  async update(cartProductId: number, { quantity }: UpdateCartProductDto) {
     await this.db
       .update(schema.cartProduct)
       .set({ quantity })
+      .where(eq(schema.cartProduct.id, cartProductId));
+  }
+
+  async delete(cartProductId: number) {
+    await this.db
+      .delete(schema.cartProduct)
       .where(eq(schema.cartProduct.id, cartProductId));
   }
 

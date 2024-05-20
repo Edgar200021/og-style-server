@@ -11,6 +11,7 @@ import { AuthService } from '../../auth.service';
 import { GoogleTokenDto } from '../../dto/google-token.dto';
 import { SignInResponse } from '../../interfaces/sign-in.response';
 import socialConfig from '../config/social.config';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class GoogleAuthenticationService implements OnModuleInit {

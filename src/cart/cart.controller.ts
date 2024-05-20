@@ -1,4 +1,13 @@
-import { Body, Controller, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { successResponse } from 'src/common/utils/apiResponse';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
@@ -6,14 +15,14 @@ import { User } from 'src/iam/decorators/user.decorator';
 import { CartService } from './cart.service';
 import { AddCartProductDto } from './dto/add-cart-product.dto';
 import { CartFiltersDto } from './dto/cart-filters.dto';
-import { DeleteCartProductDto } from './dto/delete-cart-product.dto';
 import { UpdateCartProductDto } from './dto/update-cart-product.dto';
 
-@Auth(AuthType.JWT)
 @Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  @Auth(AuthType.JWT)
+  @Get('')
   async getAll(
     @User('id') userId: number,
     @Query() cartFiltersDto: CartFiltersDto,
@@ -24,16 +33,19 @@ export class CartController {
     );
 
     return successResponse({
-      products: products.map((product) => ({
-        id: product.id,
-        quantity: product.quantity,
-        size: product.size,
-        color: product.color,
-      })),
+      products,
+      //  products: products.map((product) => ({
+      //    id: product.id,
+      //    quantity: product.quantity,
+      //    size: product.size,
+      //    color: product.color,
+      //  })),
       totalPages,
     });
   }
 
+  @Auth(AuthType.JWT)
+  @Post('')
   async add(
     @User('id') userId: number,
     @Body() addCartProductDto: AddCartProductDto,
@@ -42,19 +54,20 @@ export class CartController {
     return successResponse('Товар добавлен в корзину');
   }
 
+  @Auth(AuthType.JWT)
+  @Patch(':id')
   async update(
-    @User('id') userId: number,
+    @Param('id') id: number,
     @Body() updateCartProductDto: UpdateCartProductDto,
   ) {
-    await this.cartService.update(userId, updateCartProductDto);
+    await this.cartService.update(id, updateCartProductDto);
     return successResponse('Товар успешно обновлен');
   }
 
-  async delete(
-    @User('id') userId: number,
-    @Body() deleteCartProductDto: DeleteCartProductDto,
-  ) {
-    await this.cartService.delete(userId, deleteCartProductDto);
+  @Auth(AuthType.JWT)
+  @Delete(':id')
+  async deuserIdlete(@Param('id') id: number) {
+    await this.cartService.delete(id);
     return successResponse('Товар удален из корзины');
   }
 }

@@ -91,10 +91,13 @@ export class UserService {
   }
 
   async create(email: string, hashedPassword: string): Promise<schema.NewUser> {
-    const user = await this.db.insert(schema.user).values({
-      email,
-      password: hashedPassword,
-    });
+    const user = await this.db
+      .insert(schema.user)
+      .values({
+        email,
+        password: hashedPassword,
+      })
+      .returning({ id: schema.user.id });
 
     return user[0];
   }

@@ -45,7 +45,7 @@ export class ProductController {
 
   @ApiOperation({ summary: 'Получить список продуктов' })
   @ApiSuccessResponse(GetProductsModel)
-  @Get()
+  @Get('')
   async getProducts(@Query() productFilterDto: ProductFilterDto) {
     const { products, totalPages } =
       await this.productService.getAll(productFilterDto);
@@ -62,16 +62,6 @@ export class ProductController {
     return successResponse(filters);
   }
 
-  @ApiOperation({ summary: 'Получить продукт по ID' })
-  @Get(':id')
-  async getProduct(@Param('id') productId: number) {
-    const product = await this.productService.get(productId);
-
-    if (!product) throw new NotFoundException('Продукт не найден');
-
-    return successResponse(product);
-  }
-
   @Auth(AuthType.JWT)
   @Role('admin')
   @ApiOperation({ summary: 'Создать продукт ' })
@@ -80,29 +70,6 @@ export class ProductController {
     const product = await this.productService.create(createProductDto);
 
     return successResponse(product);
-  }
-
-  @Auth(AuthType.JWT)
-  @Role('admin')
-  @ApiOperation({ summary: 'Обновить продукт' })
-  @Patch(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() updateProductDto: UpdateProductDto,
-  ) {
-    await this.productService.update(id, updateProductDto);
-
-    return successResponse('Продукт успешно обновлен');
-  }
-
-  @Auth(AuthType.JWT)
-  @Role('admin')
-  @ApiOperation({ summary: 'Удалить продукт' })
-  @Delete(':id')
-  async delete(@Param('id') id: number) {
-    await this.productService.delete(id);
-
-    return successResponse('Продукт успешно удален');
   }
 
   @ApiOperation({ summary: 'Загрузить изображения для продукта' })
@@ -151,5 +118,38 @@ export class ProductController {
 
     const images = await this.productService.uploadImage(files);
     return successResponse(images);
+  }
+
+  @ApiOperation({ summary: 'Получить продукт по ID' })
+  @Get(':id')
+  async getProduct(@Param('id') productId: number) {
+    const product = await this.productService.get(productId);
+
+    if (!product) throw new NotFoundException('Продукт не найден');
+
+    return successResponse(product);
+  }
+
+  @Auth(AuthType.JWT)
+  @Role('admin')
+  @ApiOperation({ summary: 'Обновить продукт' })
+  @Patch(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+  ) {
+    await this.productService.update(id, updateProductDto);
+
+    return successResponse('Продукт успешно обновлен');
+  }
+
+  @Auth(AuthType.JWT)
+  @Role('admin')
+  @ApiOperation({ summary: 'Удалить продукт' })
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    await this.productService.delete(id);
+
+    return successResponse('Продукт успешно удален');
   }
 }

@@ -46,6 +46,7 @@ export class AuthService {
 
     const hashedPassword = await this.hashingService.hash(signUpDto.password);
     const user = await this.userService.create(signUpDto.email, hashedPassword);
+    console.log(user);
     await this.cartService.create(user.id);
 
     return user;
