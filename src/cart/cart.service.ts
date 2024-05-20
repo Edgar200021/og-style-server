@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { and, arrayOverlaps, count, eq } from 'drizzle-orm';
+import { and, arrayOverlaps, count, eq, sql } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DB_TOKEN } from 'src/db/db.constants';
 import * as schema from 'src/db/schema';
@@ -23,7 +23,7 @@ export class CartService {
       .from(schema.cart)
       .where(eq(schema.cart.userId, userId));
 
-    const [products, quantity] = await Promise.all([
+    const [products, stats] = await Promise.all([
       await this.db
         .select({
           id: schema.cartProduct.id,
@@ -45,15 +45,28 @@ export class CartService {
         .offset(page * limit - limit)
         .limit(limit),
       await this.db
-        .select({ count: count() })
+        .select({
+          count: count(),
+          totalDiscountedPrice: sql<number>`SUM(COALESCE(${schema.product.discountedPrice},${schema.product.price}) * ${schema.cartProduct.quantity})`,
+          totalPrice: sql<number>`SUM(${schema.product.price} * ${schema.cartProduct.quantity})`,
+        })
         .from(schema.cartProduct)
+        .leftJoin(
+          schema.product,
+          eq(schema.product.id, schema.cartProduct.productId),
+        )
         .where(eq(schema.cartProduct.cartId, result[0].id)),
     ]);
 
-    const totalPages = Math.ceil(quantity[0].count / limit);
+    const totalPages = Math.ceil(stats[0].count / limit);
 
-    //@ts-expect-error ---
-    return { totalPages, products };
+    return {
+      totalPages,
+      totalPrice: stats[0].totalPrice,
+      totalDiscountedPrice: stats[0].totalDiscountedPrice,
+      //@ts-expect-error ---
+      products,
+    };
   }
 
   async add(

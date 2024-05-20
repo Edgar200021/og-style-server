@@ -27,19 +27,13 @@ export class CartController {
     @User('id') userId: number,
     @Query() cartFiltersDto: CartFiltersDto,
   ) {
-    const { products, totalPages } = await this.cartService.getAll(
-      userId,
-      cartFiltersDto,
-    );
+    const { products, totalPages, totalDiscountedPrice, totalPrice } =
+      await this.cartService.getAll(userId, cartFiltersDto);
 
     return successResponse({
       products,
-      //  products: products.map((product) => ({
-      //    id: product.id,
-      //    quantity: product.quantity,
-      //    size: product.size,
-      //    color: product.color,
-      //  })),
+      totalDiscountedPrice,
+      totalPrice,
       totalPages,
     });
   }

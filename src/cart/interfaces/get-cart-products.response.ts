@@ -3,4 +3,6 @@ export interface GetCartProducts {
   products: (schema.CartProduct &
     Pick<schema.Product, 'name' | 'images' | 'price' | 'discountedPrice'>)[];
   totalPages: number;
+  totalPrice: number;
+  totalDiscountedPrice: number;
 }
