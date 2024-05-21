@@ -62,8 +62,8 @@ export class CartService {
 
     return {
       totalPages,
-      totalPrice: stats[0].totalPrice,
-      totalDiscountedPrice: stats[0].totalDiscountedPrice,
+      totalPrice: Number(stats[0].totalPrice),
+      totalDiscountedPrice: Number(stats[0].totalDiscountedPrice),
       //@ts-expect-error ---
       products,
     };
