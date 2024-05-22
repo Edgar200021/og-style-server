@@ -81,6 +81,30 @@ export class ProductFilterDto extends BaseFilter {
   brand: string[];
 
   @ApiProperty({
+    description: 'Название продукта',
+    example: 'Nike Air Force 1',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'Должно быть строкой' })
+  @Transform(({ value }: TransformFnParams) =>
+    (value as string).trim().toLowerCase(),
+  )
+  name: string;
+
+  @ApiProperty({
+    description: 'Совпадение по описанию,имени или категории',
+    example: 'Кроссовки',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: 'Должно быть строкой' })
+  @Transform(({ value }: TransformFnParams) =>
+    (value as string).trim().toLowerCase(),
+  )
+  search: string;
+
+  @ApiProperty({
     description: 'Минимальная цена продукта',
     example: 1000,
     required: false,

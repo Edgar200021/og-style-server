@@ -20,7 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "migrate:generate": "drizzle-kit generate:pg",
     "migrate:run": "npx tsx src/db/migrate.ts ",
-    "migrate:delete": "drizzle-kit drop"
+    "migrate:delete": "drizzle-kit drop",
+	"db:studio": "npx drizzle-kit studio"
+
   },
   "dependencies": {
     "@knaadh/nestjs-drizzle-pg": "^1.0.0",

@@ -7,6 +7,7 @@ import {
   eq,
   gte,
   inArray,
+  like,
   or,
   sql,
 } from 'drizzle-orm';
@@ -64,6 +65,8 @@ export class ProductService {
     material,
     maxPrice,
     minPrice = 0,
+    name,
+    search,
   }: ProductFilterDto): Promise<GetProductsResponse> {
     let brandIds: number[];
 
@@ -85,6 +88,16 @@ export class ProductService {
       material && arrayOverlaps(schema.product.materials, material),
       colors && arrayOverlaps(schema.product.colors, colors),
       brand && inArray(schema.product.brandId, brandIds),
+      name && like(schema.product.name, `%${name}%`),
+      search &&
+        or(
+          sql`'${sql.raw(search)}' LIKE '%' || ${schema.brand.name} || '%' AND ('${sql.raw(search)}' LIKE '%' || ${schema.product.category} || '%' OR '${sql.raw(search)}' LIKE '%' || ${schema.product.subCategory} || '%')`,
+          sql`LOWER(${schema.brand.name}) LIKE '%${sql.raw(search)}%'`,
+          sql`LOWER(${schema.product.category}) LIKE '%${sql.raw(search)}%'`,
+          sql`LOWER(${schema.product.subCategory}) LIKE '%${sql.raw(search)}%'`,
+          sql`LOWER(${schema.product.name}) LIKE '%${sql.raw(search)}%'`,
+          sql`LOWER(${schema.product.description}) LIKE '%${sql.raw(search)}%'`,
+        ),
       maxPrice
         ? between(schema.product.price, minPrice, maxPrice)
         : gte(schema.product.price, minPrice),
@@ -92,12 +105,31 @@ export class ProductService {
 
     const [products, totalProducts] = await Promise.all([
       this.db
-        .select()
+        .select({
+          id: schema.product.id,
+          name: schema.product.name,
+          description: schema.product.description,
+          price: schema.product.price,
+          discountedPrice: schema.product.discountedPrice,
+          discount: schema.product.discount,
+          category: schema.product.category,
+          subCategory: schema.product.subCategory,
+          images: schema.product.images,
+          size: schema.product.size,
+          materials: schema.product.materials,
+          colors: schema.product.colors,
+          brandId: schema.product.brandId,
+        })
         .from(schema.product)
+        .leftJoin(schema.brand, eq(schema.product.brandId, schema.brand.id))
         .where(filters)
         .offset(page * limit - limit)
         .limit(limit),
-      this.db.select({ count: count() }).from(schema.product).where(filters),
+      this.db
+        .select({ count: count() })
+        .from(schema.product)
+        .leftJoin(schema.brand, eq(schema.product.brandId, schema.brand.id))
+        .where(filters),
     ]);
 
     const totalPages = Math.ceil(totalProducts[0].count / limit);
