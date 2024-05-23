@@ -11,6 +11,8 @@ import {
   or,
   sql,
 } from 'drizzle-orm';
+//eslint-disable-next-line
+import { Multer } from 'multer';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { DB_TOKEN } from 'src/db/db.constants';

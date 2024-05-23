@@ -13,6 +13,8 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
+//eslint-disable-next-line
+import { Multer } from 'multer';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBody,

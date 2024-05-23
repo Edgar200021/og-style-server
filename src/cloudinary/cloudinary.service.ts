@@ -3,6 +3,8 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
+//eslint-disable-next-line
+import { Multer } from 'multer';
 import { ConfigType } from '@nestjs/config';
 import { v2 as cloudinary } from 'cloudinary';
 import cloudinaryConfig from './config/cloudinary.config';
