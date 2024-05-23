@@ -21,8 +21,7 @@
     "migrate:generate": "drizzle-kit generate:pg",
     "migrate:run": "npx tsx src/db/migrate.ts ",
     "migrate:delete": "drizzle-kit drop",
-	"db:studio": "npx drizzle-kit studio"
-
+    "db:studio": "npx drizzle-kit studio"
   },
   "dependencies": {
     "@knaadh/nestjs-drizzle-pg": "^1.0.0",
@@ -34,6 +33,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.3.1",
     "@types/cookie-parser": "^1.4.7",
+    "@vercel/postgres": "^0.8.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

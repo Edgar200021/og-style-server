@@ -9,7 +9,8 @@ export const dbConfig = (
     pg: {
       connection: 'pool' as const,
       config: {
-        connectionString: configService.get('DB_CONNECTION_STRING'),
+        //connectionString: configService.get('DB_CONNECTION_STRING'),
+        connectionString: configService.get('POSTGRES_URL'),
       },
     },
     config: { schema: { ...schema } },

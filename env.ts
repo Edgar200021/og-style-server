@@ -25,6 +25,7 @@ export const envSchema = z.object({
   CLOUDINARY_API_SECRET: z.string(),
   CLOUDINARY_CLOUD_NAME: z.string(),
   CLOUDINARY_FOLDER: z.string(),
+  POSTGRES_URL: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;
